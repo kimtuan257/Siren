@@ -15,7 +15,16 @@ public final class Siren: NSObject {
 
     /// Current installed version of your app.
     internal var currentInstalledVersion: String? = {
-        return Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+        if let path = Bundle.main.path(forResource: "BundleAppVersion", ofType: "plist") {
+            let dictRoot = NSDictionary(contentsOfFile: path)
+            if let dict = dictRoot {
+                return dict["VersionInstalled"] as? String
+            } else {
+                return Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+            }
+        } else {
+            return Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+        }
     }()
 
     /// The error domain for all errors created by Siren.
